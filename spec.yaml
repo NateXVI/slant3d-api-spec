@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Slant 3D API
-  version: 1.0.0
+  title: Unofficial Slant 3D API Specification
+  version: 0.1.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -13,6 +13,7 @@ paths:
   /api/slicer:
     post:
       summary: Slices a 3D model
+      description: Slices a 3D model and returns the price
       operationId: sliceModel
       security:
         - ApiKeyAuth: []
@@ -26,9 +27,11 @@ paths:
                   type: string
                   format: uri
                   example: http://example.com/model.stl
+              required:
+                - fileURL
       responses:
         "200":
-          description: A 3D model slice
+          description: Model sliced successfully
           content:
             application/json:
               schema:
@@ -50,7 +53,90 @@ paths:
               schema:
                 oneOf:
                   - $ref: "#/components/schemas/Error"
-                  - $ref: "#/components/schemas/ValidationError"
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: No file URL provided in the request.
+
+  /api/order:
+    post:
+      summary: Place an order
+      operationId: placeOrder
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "200":
+          description: Order placed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 9e2XgsckuItf6JfiDdci
+            # The API currently returns the order number as plain text, but will eventually return a json object instead
+            # application/json:
+            #   schema:
+            #     type: object
+            #     properties:
+            #       orderNumber:
+            #         type: string
+            #         example: 123456
+            #       OrderId:
+            #         type: string
+            #         example: 123456
+            #       status:
+            #         type: string
+            #         example: Processed
+            #       shippingRate:
+            #         type: string
+            #         example: $5.00
+            #       totalPrice:
+            #         type: string
+            #         example: $25.00
+        "400":
+          description: Invalid input or unable to place order
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Error"
+                  - $ref: "#/components/schemas/SimpleError"
+
+  # /api/estimate:
+  #   post:
+  #     summary: Estimate an order
+  #     operationId: estimateOrder
+  #     security:
+  #       - ApiKeyAuth: []
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Order"
+  #     responses:
+  #       "200":
+  #         description: Order placed successfully
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 totalPrice:
+  #                   type: string
+  #                   example: $25.00
+  #       "400":
+  #         description: Invalid input or unable to place order
+  #         content:
+  #           application/json:
+  #             schema:
+  #               oneOf:
+  #                 - $ref: "#/components/schemas/Error"
+  #                 - $ref: "#/components/schemas/SimpleError"
 
 components:
   schemas:
@@ -58,19 +144,109 @@ components:
       type: object
       properties:
         error:
-          type: object
-          properties:
-            message:
-              type: string
-            status:
-              type: integer
-              example: 400
-    ValidationError:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+        status:
+          type: integer
+          example: 400
+        url:
+          type: string
+    SimpleError:
       type: object
       properties:
         error:
           type: string
           example: No file URL provided in the request.
+    Order:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        name:
+          type: string
+        orderNumber:
+          type: string
+        filename:
+          type: string
+        fileURL:
+          type: string
+          format: uri
+        bill_to_street_1:
+          type: string
+        bill_to_street_2:
+          type: string
+        bill_to_street_3:
+          type: string
+        bill_to_city:
+          type: string
+        bill_to_state:
+          type: string
+        bill_to_zip:
+          type: string
+        bill_to_country_as_iso:
+          type: string
+        bill_to_is_US_residential:
+          type: string
+          enum:
+            - "true"
+            - "false"
+        ship_to_name:
+          type: string
+        ship_to_street_1:
+          type: string
+        ship_to_street_2:
+          type: string
+        ship_to_street_3:
+          type: string
+        ship_to_city:
+          type: string
+        ship_to_state:
+          type: string
+        ship_to_zip:
+          type: string
+        ship_to_country_as_iso:
+          type: string
+        ship_to_is_US_residential:
+          type: string
+          enum:
+            - "true"
+            - "false"
+        order_item_name:
+          type: string
+        order_quantity:
+          type: string
+          example: "1"
+        order_image_url:
+          type: string
+          format: uri
+        order_sku:
+          type: string
+        order_item_color:
+          type: string
+          enum:
+            - "black"
+            - "white"
+            - "grey"
+      required:
+        - email
+        - phone
+        - name
+        - orderNumber
+        - filename
+        - fileURL
+        - bill_to_street_1
+        - bill_to_city
+        - bill_to_state
+        - bill_to_zip
+        - ship_to_country_as_iso
+        - order_quantity
+        - order_item_color
+
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
