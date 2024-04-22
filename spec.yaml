@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: Slant 3D API
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://www.slant3dapi.com
+
+paths:
+  /api/slicer:
+    post:
+      summary: Slices a 3D model
+      operationId: sliceModel
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileURL:
+                  type: string
+                  format: uri
+                  example: http://example.com/model.stl
+      responses:
+        "200":
+          description: A 3D model slice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slicing successful
+                  data:
+                    type: object
+                    properties:
+                      price:
+                        type: number
+                        example: 4.4
+        "400":
+          description: Invalid input or unable to slice model
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Error"
+                  - $ref: "#/components/schemas/ValidationError"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            status:
+              type: integer
+              example: 400
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: No file URL provided in the request.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
