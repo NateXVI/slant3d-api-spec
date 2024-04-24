@@ -127,8 +127,8 @@ paths:
                 type: object
                 properties:
                   totalPrice:
-                    type: string
-                    example: $25.00
+                    type: number
+                    example: 9.47
         "400":
           description: Invalid input or unable to place order
           content:
