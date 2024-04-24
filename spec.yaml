@@ -110,6 +110,7 @@ paths:
   /api/order/estimate:
     post:
       summary: Estimate an order
+      description: Estimates the price of an order with shipping
       operationId: estimateOrder
       security:
         - ApiKeyAuth: []
