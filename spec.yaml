@@ -107,36 +107,36 @@ paths:
                   - $ref: "#/components/schemas/Error"
                   - $ref: "#/components/schemas/SimpleError"
 
-  # /api/estimate:
-  #   post:
-  #     summary: Estimate an order
-  #     operationId: estimateOrder
-  #     security:
-  #       - ApiKeyAuth: []
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Order"
-  #     responses:
-  #       "200":
-  #         description: Order placed successfully
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 totalPrice:
-  #                   type: string
-  #                   example: $25.00
-  #       "400":
-  #         description: Invalid input or unable to place order
-  #         content:
-  #           application/json:
-  #             schema:
-  #               oneOf:
-  #                 - $ref: "#/components/schemas/Error"
-  #                 - $ref: "#/components/schemas/SimpleError"
+  /api/order/estimate:
+    post:
+      summary: Estimate an order
+      operationId: estimateOrder
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "200":
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalPrice:
+                    type: string
+                    example: $25.00
+        "400":
+          description: Invalid input or unable to place order
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Error"
+                  - $ref: "#/components/schemas/SimpleError"
 
 components:
   schemas:
