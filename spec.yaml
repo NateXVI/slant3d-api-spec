@@ -59,9 +59,13 @@ paths:
           content:
             text/plain:
               schema:
-                type: string
-                example: 9e2XgsckuItf6JfiDdci
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    example: 9e2XgsckuItf6JfiDdci
             # The API currently returns the order number as plain text, but will eventually return a json object instead
+            # Update: The API now returns a json object instead of plain text, but it still only returns the order id
             # application/json:
             #   schema:
             #     type: object
