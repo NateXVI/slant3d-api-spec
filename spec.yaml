@@ -150,25 +150,6 @@ components:
             price:
               type: number
               example: 4.4
-    Error:
-      type: object
-      properties:
-        error:
-          oneOf:
-            - type: string
-            - type: object
-            - type: array
-        status:
-          type: integer
-          example: 400
-        url:
-          type: string
-    SimpleError:
-      type: object
-      properties:
-        error:
-          type: string
-          example: No file URL provided in the request.
     Order:
       type: object
       properties:
@@ -256,6 +237,25 @@ components:
         - ship_to_country_as_iso
         - order_quantity
         - order_item_color
+    Error:
+      type: object
+      properties:
+        error:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+        status:
+          type: integer
+          example: 400
+        url:
+          type: string
+    SimpleError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: No file URL provided in the request.
 
   securitySchemes:
     ApiKeyAuth:
