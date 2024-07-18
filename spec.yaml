@@ -21,31 +21,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                fileURL:
-                  type: string
-                  format: uri
-                  example: http://example.com/model.stl
-              required:
-                - fileURL
+              $ref: "#/components/schemas/SliceRequest"
       responses:
         "200":
           description: Model sliced successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Slicing successful
-                  data:
-                    type: object
-                    properties:
-                      price:
-                        type: number
-                        example: 4.4
+                $ref: "#/components/schemas/SliceResponse"
         "400":
           description: Invalid input or unable to slice model
           content:
@@ -130,6 +113,7 @@ paths:
                   totalPrice:
                     type: number
                     example: 9.47
+
         "400":
           description: Invalid input or unable to place order
           content:
@@ -141,6 +125,27 @@ paths:
 
 components:
   schemas:
+    SliceRequest:
+      type: object
+      properties:
+        fileURL:
+          type: string
+          format: uri
+          example: http://example.com/model.stl
+      required:
+        - fileURL
+    SliceResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Slicing successful
+        data:
+          type: object
+          properties:
+            price:
+              type: number
+              example: 4.4
     Error:
       type: object
       properties:
