@@ -42,6 +42,25 @@ paths:
                         type: string
                         example: No file URL provided in the request.
 
+  /api/filament:
+    get:
+      summary: Get filaments
+      operationId: getFilaments
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: Filaments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filaments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Filament"
+
   /api/order:
     post:
       summary: Place an order
@@ -150,6 +169,21 @@ components:
             price:
               type: number
               example: 4.4
+    Filament:
+      type: object
+      properties:
+        filament:
+          type: string
+          example: "PLA BLACK"
+        hexColor:
+          type: string
+          example: "000000"
+        colorTag:
+          type: string
+          example: "black"
+        profile:
+          type: string
+          example: "PLA"
     Order:
       type: object
       properties:
