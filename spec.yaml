@@ -146,6 +146,40 @@ paths:
                   - $ref: "#/components/schemas/Error"
                   - $ref: "#/components/schemas/SimpleError"
 
+  /api/order/{orderId}/get-tracking:
+    get:
+      summary: Get tracking
+      description: Gets the status of an order
+      operationId: getTracking
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: The order ID
+          example: 9e2XgsckuItf6JfiDdci
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/OrderStatus"
+                  trackingNumbers:
+                    type: array
+        "400":
+          description: Invalid input or unable to get order status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     SliceRequest:
@@ -267,6 +301,13 @@ components:
         - ship_to_country_as_iso
         - order_quantity
         - order_item_color
+    OrderStatus:
+      type: string
+      enum:
+        - awaiting_shipment
+        - shipped
+        - on_hold
+        - cancelled
     Error:
       type: object
       properties:
